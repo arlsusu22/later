@@ -9,13 +9,15 @@
   </head>
   <body>
     <header class="site-header">
-      <div class="site-header__inner">
-        <a class="site-logo" href="index.html">Later</a>
+      <div class="site-header__bar">
         <nav class="site-nav" aria-label="Primary">
           <a href="privacy.html">Privacy</a>
           <a href="terms.html">Terms</a>
           <a href="support.html">Support</a>
         </nav>
+      </div>
+      <div class="site-header__brand">
+        <a class="site-logo" href="index.html">Later</a>
       </div>
     </header>
 
@@ -27,28 +29,139 @@
         </p>
       </section>
 
-      <section aria-labelledby="quick-links">
-        <h2 id="quick-links" class="visually-hidden" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0">Quick links</h2>
-        <div class="card-grid">
-          <a class="card" href="privacy.html">
-            <strong>Privacy policy</strong>
-            <span>How we handle your data</span>
-          </a>
-          <a class="card" href="terms.html">
-            <strong>Terms of use</strong>
-            <span>Rules for using Later</span>
-          </a>
-          <a class="card" href="support.html">
-            <strong>Support</strong>
-            <span>Help &amp; contact</span>
-          </a>
+      <section class="carousel-section" aria-labelledby="carousel-heading">
+        <h2 id="carousel-heading" class="visually-hidden">App highlights</h2>
+        <div class="carousel" data-carousel>
+          <div class="carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Later app screenshots">
+            <button type="button" class="carousel__btn carousel__btn--prev" aria-label="Previous slide" data-carousel-prev>
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div class="carousel__track" tabindex="0" data-carousel-track>
+              <figure class="carousel__slide">
+                <img src="images/carousel/slide-01.png" width="780" height="1400" alt="Later app: sort saves by intention such as Read, Watch, or Buy." loading="eager" decoding="async" />
+              </figure>
+              <figure class="carousel__slide">
+                <img src="images/carousel/slide-02.png" width="780" height="1400" alt="Later app: add reminders and get notified at the right time." loading="lazy" decoding="async" />
+              </figure>
+              <figure class="carousel__slide">
+                <img src="images/carousel/slide-03.png" width="780" height="1400" alt="Later app: save from anywhere and browse your library in one place." loading="lazy" decoding="async" />
+              </figure>
+              <figure class="carousel__slide">
+                <img src="images/carousel/slide-04.png" width="780" height="1400" alt="Later app: search across all your saves in seconds." loading="lazy" decoding="async" />
+              </figure>
+            </div>
+            <button type="button" class="carousel__btn carousel__btn--next" aria-label="Next slide" data-carousel-next>
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+          <div class="carousel__dots" role="tablist" aria-label="Slide selection" data-carousel-dots></div>
         </div>
       </section>
+
+      <p class="store-cta">
+        <a class="btn-appstore" href="https://apps.apple.com/be/app/later-save-anything/id6761394122" rel="noopener noreferrer" target="_blank">Download in App Store</a>
+      </p>
     </main>
 
     <footer class="site-footer">
       <p>© 2026 Later. All rights reserved.</p>
       <p style="margin-top: 0.5rem"><a href="mailto:laterapp2@gmail.com">laterapp2@gmail.com</a></p>
     </footer>
+
+    <script>
+      (function () {
+        var root = document.querySelector("[data-carousel]");
+        if (!root) return;
+        var track = root.querySelector("[data-carousel-track]");
+        var prev = root.querySelector("[data-carousel-prev]");
+        var next = root.querySelector("[data-carousel-next]");
+        var dotsHost = root.querySelector("[data-carousel-dots]");
+        var slides = track ? track.querySelectorAll(".carousel__slide") : [];
+        var n = slides.length;
+        if (!track || n === 0) return;
+
+        var i = 0;
+
+        function dotEl(index) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "carousel__dot" + (index === i ? " is-active" : "");
+          b.setAttribute("role", "tab");
+          b.setAttribute("aria-selected", index === i ? "true" : "false");
+          b.setAttribute("aria-label", "Go to slide " + (index + 1) + " of " + n);
+          b.addEventListener("click", function () {
+            go(index);
+          });
+          return b;
+        }
+
+        function renderDots() {
+          dotsHost.innerHTML = "";
+          for (var d = 0; d < n; d++) dotsHost.appendChild(dotEl(d));
+        }
+
+        function go(index) {
+          i = Math.max(0, Math.min(n - 1, index));
+          var slide = slides[i];
+          if (slide) track.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+          Array.prototype.forEach.call(dotsHost.querySelectorAll(".carousel__dot"), function (dot, idx) {
+            var on = idx === i;
+            dot.classList.toggle("is-active", on);
+            dot.setAttribute("aria-selected", on ? "true" : "false");
+          });
+        }
+
+        function syncFromScroll() {
+          var mid = track.scrollLeft + track.clientWidth / 2;
+          var best = 0;
+          var bestDist = Infinity;
+          for (var s = 0; s < n; s++) {
+            var el = slides[s];
+            var c = el.offsetLeft + el.offsetWidth / 2;
+            var dist = Math.abs(c - mid);
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = s;
+            }
+          }
+          if (best !== i) {
+            i = best;
+            Array.prototype.forEach.call(dotsHost.querySelectorAll(".carousel__dot"), function (dot, idx) {
+              var on = idx === i;
+              dot.classList.toggle("is-active", on);
+              dot.setAttribute("aria-selected", on ? "true" : "false");
+            });
+          }
+        }
+
+        var scrollTimer;
+        track.addEventListener("scroll", function () {
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(syncFromScroll, 80);
+        });
+
+        prev.addEventListener("click", function () {
+          go(i - 1);
+        });
+        next.addEventListener("click", function () {
+          go(i + 1);
+        });
+
+        track.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            go(i - 1);
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            go(i + 1);
+          }
+        });
+
+        renderDots();
+        window.addEventListener("resize", function () {
+          go(i);
+        });
+      })();
+    </script>
   </body>
 </html>
