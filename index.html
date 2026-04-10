@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Later — save links with intention. Reminders and a calm library on iPhone." />
+    <meta name="description" content="Later helps you capture URLs from other apps, tag them with intentions, add notes, and get local reminders — all on your device." />
     <title>Later</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@8..144,700..1000&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="css/site.css" />
   </head>
   <body>
@@ -16,14 +19,11 @@
           <a href="support.html">Support</a>
         </nav>
       </div>
-      <div class="site-header__brand">
-        <a class="site-logo" href="index.html">Later</a>
-      </div>
     </header>
 
     <main>
       <section class="hero">
-        <h1>Save links with intention.</h1>
+        <h1>Later</h1>
         <p>
           Later helps you capture URLs from other apps, tag them with intentions, add notes, and get local reminders — all on your device.
         </p>
@@ -33,34 +33,20 @@
         <h2 id="carousel-heading" class="visually-hidden">App highlights</h2>
         <div class="carousel" data-carousel>
           <div class="carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Later app screenshots">
-            <button type="button" class="carousel__btn carousel__btn--prev" aria-label="Previous slide" data-carousel-prev>
-              <span aria-hidden="true">‹</span>
-            </button>
             <div class="carousel__track" tabindex="0" data-carousel-track>
               <figure class="carousel__slide">
-                <div class="carousel__device">
-                  <img src="images/carousel/slide-01.png" width="780" height="1400" alt="Later app: sort saves by intention such as Read, Watch, or Buy." loading="eager" decoding="async" />
-                </div>
+                <img src="images/carousel/slide-01.png" width="780" height="1400" alt="Later app: sort saves by intention such as Read, Watch, or Buy." loading="eager" decoding="async" />
               </figure>
               <figure class="carousel__slide">
-                <div class="carousel__device">
-                  <img src="images/carousel/slide-02.png" width="780" height="1400" alt="Later app: add reminders and get notified at the right time." loading="lazy" decoding="async" />
-                </div>
+                <img src="images/carousel/slide-02.png" width="780" height="1400" alt="Later app: add reminders and get notified at the right time." loading="lazy" decoding="async" />
               </figure>
               <figure class="carousel__slide">
-                <div class="carousel__device">
-                  <img src="images/carousel/slide-03.png" width="780" height="1400" alt="Later app: save from anywhere and browse your library in one place." loading="lazy" decoding="async" />
-                </div>
+                <img src="images/carousel/slide-03.png" width="780" height="1400" alt="Later app: save from anywhere and browse your library in one place." loading="lazy" decoding="async" />
               </figure>
               <figure class="carousel__slide">
-                <div class="carousel__device">
-                  <img src="images/carousel/slide-04.png" width="780" height="1400" alt="Later app: search across all your saves in seconds." loading="lazy" decoding="async" />
-                </div>
+                <img src="images/carousel/slide-04.png" width="780" height="1400" alt="Later app: search across all your saves in seconds." loading="lazy" decoding="async" />
               </figure>
             </div>
-            <button type="button" class="carousel__btn carousel__btn--next" aria-label="Next slide" data-carousel-next>
-              <span aria-hidden="true">›</span>
-            </button>
           </div>
           <div class="carousel__dots" role="tablist" aria-label="Slide selection" data-carousel-dots></div>
         </div>
@@ -91,8 +77,6 @@
         var root = document.querySelector("[data-carousel]");
         if (!root) return;
         var track = root.querySelector("[data-carousel-track]");
-        var prev = root.querySelector("[data-carousel-prev]");
-        var next = root.querySelector("[data-carousel-next]");
         var dotsHost = root.querySelector("[data-carousel-dots]");
         var slides = track ? track.querySelectorAll(".carousel__slide") : [];
         var n = slides.length;
@@ -121,18 +105,7 @@
         function targetLeftFor(index) {
           var slide = slides[index];
           if (!slide) return 0;
-          return Math.max(0, slide.offsetLeft - (track.clientWidth - slide.offsetWidth) / 2);
-        }
-
-        function updateControls() {
-          prev.disabled = i === 0;
-          next.disabled = i === n - 1;
-        }
-
-        function updateActiveSlide() {
-          Array.prototype.forEach.call(slides, function (slide, idx) {
-            slide.classList.toggle("is-active", idx === i);
-          });
+          return slide.offsetLeft;
         }
 
         function go(index) {
@@ -143,8 +116,6 @@
             dot.classList.toggle("is-active", on);
             dot.setAttribute("aria-selected", on ? "true" : "false");
           });
-          updateActiveSlide();
-          updateControls();
         }
 
         function syncFromScroll() {
@@ -167,8 +138,6 @@
               dot.classList.toggle("is-active", on);
               dot.setAttribute("aria-selected", on ? "true" : "false");
             });
-            updateActiveSlide();
-            updateControls();
           }
         }
 
@@ -176,13 +145,6 @@
         track.addEventListener("scroll", function () {
           clearTimeout(scrollTimer);
           scrollTimer = setTimeout(syncFromScroll, 80);
-        });
-
-        prev.addEventListener("click", function () {
-          go(i - 1);
-        });
-        next.addEventListener("click", function () {
-          go(i + 1);
         });
 
         track.addEventListener("keydown", function (e) {
@@ -196,8 +158,6 @@
         });
 
         renderDots();
-        updateActiveSlide();
-        updateControls();
         window.addEventListener("resize", function () {
           go(i);
         });
