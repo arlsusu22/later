@@ -1,10 +1,10 @@
 :root {
-  --bg: #0c0c0e;
-  --surface: #16161a;
-  --text: #f4f4f5;
-  --muted: #a1a1aa;
-  --accent: #3b82f6;
-  --border: rgba(255, 255, 255, 0.08);
+  --bg: #05070b;
+  --surface: rgba(19, 24, 33, 0.82);
+  --text: #f5f7fb;
+  --muted: #aab4c3;
+  --accent: #0a84ff;
+  --border: rgba(255, 255, 255, 0.1);
   --max: 42rem;
 }
 
@@ -25,7 +25,9 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   color: var(--text);
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top, rgba(10, 132, 255, 0.18), transparent 34%),
+    linear-gradient(180deg, #0e1420 0%, var(--bg) 52%, #040507 100%);
 }
 
 a {
@@ -39,8 +41,8 @@ a:hover {
 
 .site-header {
   border-bottom: 1px solid var(--border);
-  background: rgba(12, 12, 14, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(7, 10, 16, 0.7);
+  backdrop-filter: blur(18px) saturate(145%);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -150,15 +152,23 @@ main {
 .carousel__viewport {
   position: relative;
   width: 100%;
-  border-radius: 16px;
+  padding: 1rem 0 0.5rem;
+  border-radius: 30px;
   overflow: hidden;
   border: 1px solid var(--border);
-  background: #000;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(25, 31, 43, 0.94), rgba(8, 10, 14, 0.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 22px 70px rgba(0, 0, 0, 0.35);
 }
 
 .carousel__track {
   display: flex;
+  gap: 1rem;
   width: 100%;
+  padding: 0 1rem 1rem;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -172,15 +182,69 @@ main {
 }
 
 .carousel__slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+  flex: 0 0 min(18.75rem, calc(100% - 4rem));
+  scroll-snap-align: center;
   margin: 0;
+  opacity: 0.7;
+  transform: scale(0.94);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.carousel__slide:first-child {
+  margin-left: auto;
+}
+
+.carousel__slide:last-child {
+  margin-right: auto;
+}
+
+.carousel__slide:focus-within,
+.carousel__slide:hover,
+.carousel__slide.is-active {
+  opacity: 1;
+  transform: scale(0.98);
+}
+
+.carousel__device {
+  position: relative;
+  border-radius: 2.3rem;
+  padding: 0.55rem;
+  background: linear-gradient(180deg, #2e3440, #090b10);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.18),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.65),
+    0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.carousel__device::before {
+  content: "";
+  position: absolute;
+  top: 0.72rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34%;
+  height: 1.45rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 2;
+}
+
+.carousel__device::after {
+  content: "";
+  position: absolute;
+  inset: 0.28rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
 }
 
 .carousel__slide img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 39 / 70;
+  object-fit: cover;
+  border-radius: 1.85rem;
   vertical-align: middle;
 }
 
@@ -189,23 +253,26 @@ main {
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(16, 20, 28, 0.72);
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s ease;
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+  transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
 }
 
 .carousel__btn:hover {
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(26, 31, 41, 0.88);
+  transform: translateY(-50%) scale(1.03);
 }
 
 .carousel__btn:focus-visible {
@@ -213,12 +280,18 @@ main {
   outline-offset: 2px;
 }
 
+.carousel__btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  transform: translateY(-50%);
+}
+
 .carousel__btn--prev {
-  left: 0.5rem;
+  left: 0.85rem;
 }
 
 .carousel__btn--next {
-  right: 0.5rem;
+  right: 0.85rem;
 }
 
 .carousel__dots {
@@ -235,20 +308,21 @@ main {
   padding: 0;
   border: none;
   border-radius: 999px;
-  background: var(--muted);
-  opacity: 0.45;
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 0.7;
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease, width 0.15s ease, background 0.15s ease;
 }
 
 .carousel__dot:hover {
-  opacity: 0.75;
+  opacity: 0.95;
 }
 
 .carousel__dot.is-active {
   opacity: 1;
   background: var(--accent);
-  transform: scale(1.15);
+  width: 1.65rem;
+  transform: none;
 }
 
 .store-cta {
@@ -260,25 +334,68 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #0c0c0e;
-  background: #fff;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  gap: 0.85rem;
+  min-width: min(100%, 18rem);
+  padding: 0.9rem 1.25rem;
+  color: #fff;
+  background: linear-gradient(180deg, #20242c, #060708);
+  border-radius: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
 .btn-appstore:hover {
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 22px 34px rgba(0, 0, 0, 0.35);
 }
 
 .btn-appstore:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+.btn-appstore__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.btn-appstore__icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  display: block;
+  fill: currentColor;
+}
+
+.btn-appstore__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+}
+
+.btn-appstore__eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-appstore__title {
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .card {
@@ -336,6 +453,59 @@ main {
   margin: 0;
   color: #d4d4d8;
   font-size: 0.9375rem;
+}
+
+@media (max-width: 640px) {
+  main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .carousel__viewport {
+    padding-top: 0.75rem;
+    border-radius: 24px;
+  }
+
+  .carousel__track {
+    gap: 0.85rem;
+    padding: 0 0.75rem 0.9rem;
+  }
+
+  .carousel__slide {
+    flex-basis: calc(100% - 2.5rem);
+  }
+
+  .carousel__btn {
+    width: 2.4rem;
+    height: 2.4rem;
+    font-size: 1.5rem;
+  }
+
+  .carousel__btn--prev {
+    left: 0.5rem;
+  }
+
+  .carousel__btn--next {
+    right: 0.5rem;
+  }
+
+  .btn-appstore {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel__track {
+    scroll-behavior: auto;
+  }
+
+  .carousel__slide,
+  .carousel__btn,
+  .carousel__dot,
+  .btn-appstore,
+  .card {
+    transition: none;
+  }
 }
 
 .doc-section ul {
