@@ -194,21 +194,24 @@ main {
   border-top: 1px solid var(--border);
 }
 
-.btn-appstore {
+.appstore-badge-link {
+  background: none;
+  border: 0;
   display: inline-block;
   line-height: 0;
+  padding: 0;
 }
 
-.btn-appstore:hover {
+.appstore-badge-link:hover {
   text-decoration: none;
 }
 
-.btn-appstore:focus-visible {
+.appstore-badge-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-.btn-appstore img {
+.appstore-badge-link img {
   display: block;
   width: min(100%, 12rem);
   height: auto;
@@ -281,9 +284,6 @@ main {
     font-size: clamp(2.8rem, 16vw, 4rem);
   }
 
-  .btn-appstore {
-    width: 100%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -292,7 +292,6 @@ main {
   }
 
   .carousel__dot,
-  .btn-appstore,
   .card {
     transition: none;
   }
