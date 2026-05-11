@@ -203,7 +203,7 @@ main {
 }
 
 .store-cta {
-  margin: 1.75rem 0 0;
+  margin: 3rem 0 0;
   max-width: none;
 }
 
@@ -320,6 +320,10 @@ main {
 
   .appstore-badge-link img {
     margin: 0 auto;
+  }
+
+  .store-cta {
+    margin-top: 2.5rem;
   }
 
   .hero__showcase {
