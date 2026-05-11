@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@8..144,700..1000&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/site.css?v=20260412-2" />
+    <link rel="stylesheet" href="css/site.css?v=20260511-1" />
   </head>
   <body>
     <header class="site-header">
@@ -22,41 +22,42 @@
     </header>
 
     <main>
-      <section class="hero">
-        <h1>Later</h1>
-        <p>
-          Later helps you capture URLs from other apps, tag them with intentions, add notes, and get local reminders — all on your device.
-        </p>
-        <p class="store-cta">
-          <a class="appstore-badge-link" href="https://apps.apple.com/be/app/later-save-anything/id6761394122" rel="noopener noreferrer" target="_blank" aria-label="Download Later on the App Store">
-            <img src="images/badges/download-on-the-app-store.svg" width="119.66407" height="40" alt="Download on the App Store" />
-          </a>
-        </p>
-      </section>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <h1 id="hero-title">Later</h1>
+          <p>
+            Save links, screenshots, notes, and reminders from anywhere. Later keeps everything private, organized, and ready when you need it.
+          </p>
+          <p class="store-cta">
+            <a class="appstore-badge-link" href="https://apps.apple.com/be/app/later-save-anything/id6761394122" rel="noopener noreferrer" target="_blank" aria-label="Download Later on the App Store">
+              <img src="images/badges/download-on-the-app-store.svg" width="119.66407" height="40" alt="Download on the App Store" />
+            </a>
+          </p>
+        </div>
 
-      <section class="carousel-section" aria-labelledby="carousel-heading">
-        <h2 id="carousel-heading" class="visually-hidden">App highlights</h2>
-        <div class="carousel" data-carousel>
-          <div class="carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Later app screenshots">
-            <div class="carousel__track" tabindex="0" data-carousel-track>
-              <figure class="carousel__slide">
-                <img src="images/carousel/slide-03.png" width="819" height="1024" alt="Later app: save from anywhere and browse your library in one place." loading="eager" decoding="async" />
-              </figure>
-              <figure class="carousel__slide">
-                <img src="images/carousel/slide-01.png" width="819" height="1024" alt="Later app: sort saves by intention such as Read, Watch, or Buy." loading="lazy" decoding="async" />
-              </figure>
-              <figure class="carousel__slide">
-                <img src="images/carousel/slide-02.png" width="819" height="1024" alt="Later app: add reminders and get notified at the right time." loading="lazy" decoding="async" />
-              </figure>
-              <figure class="carousel__slide">
-                <img src="images/carousel/slide-04.png" width="819" height="1024" alt="Later app: search across all your saves in seconds." loading="lazy" decoding="async" />
-              </figure>
+        <div class="hero__showcase">
+          <h2 id="carousel-heading" class="visually-hidden">App highlights</h2>
+          <div class="carousel" data-carousel aria-labelledby="carousel-heading">
+            <div class="carousel__viewport" role="region" aria-roledescription="carousel" aria-label="Later app screenshots">
+              <div class="carousel__track" tabindex="0" data-carousel-track>
+                <figure class="carousel__slide">
+                  <img src="images/carousel/save-links.png" width="961" height="1980" alt="Later app: save links from anywhere." loading="eager" decoding="async" />
+                  <figcaption>Save links from anywhere.</figcaption>
+                </figure>
+                <figure class="carousel__slide">
+                  <img src="images/carousel/save-screenshots.png" width="961" height="1980" alt="Later app: seamlessly save screenshots." loading="lazy" decoding="async" />
+                  <figcaption>Seamlessly save screenshots.</figcaption>
+                </figure>
+                <figure class="carousel__slide">
+                  <img src="images/carousel/add-reminders.png" width="961" height="1980" alt="Later app: add reminders to any saved item." loading="lazy" decoding="async" />
+                  <figcaption>Add reminders to any item.</figcaption>
+                </figure>
+              </div>
             </div>
+            <div class="carousel__dots" role="tablist" aria-label="Slide selection" data-carousel-dots></div>
           </div>
-          <div class="carousel__dots" role="tablist" aria-label="Slide selection" data-carousel-dots></div>
         </div>
       </section>
-
     </main>
 
     <footer class="site-footer">
@@ -75,6 +76,8 @@
         if (!track || n === 0) return;
 
         var i = 0;
+        var autoTimer;
+        var paused = false;
 
         function dotEl(index) {
           var b = document.createElement("button");
@@ -108,6 +111,22 @@
             dot.classList.toggle("is-active", on);
             dot.setAttribute("aria-selected", on ? "true" : "false");
           });
+        }
+
+        function next() {
+          go((i + 1) % n);
+        }
+
+        function startAuto() {
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          stopAuto();
+          autoTimer = window.setInterval(function () {
+            if (!paused) next();
+          }, 3200);
+        }
+
+        function stopAuto() {
+          if (autoTimer) window.clearInterval(autoTimer);
         }
 
         function syncFromScroll() {
@@ -149,7 +168,21 @@
           }
         });
 
+        root.addEventListener("mouseenter", function () {
+          paused = true;
+        });
+        root.addEventListener("mouseleave", function () {
+          paused = false;
+        });
+        root.addEventListener("focusin", function () {
+          paused = true;
+        });
+        root.addEventListener("focusout", function () {
+          paused = false;
+        });
+
         renderDots();
+        startAuto();
         window.addEventListener("resize", function () {
           go(i);
         });
