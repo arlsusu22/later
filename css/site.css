@@ -115,6 +115,10 @@ main {
   max-width: 29rem;
 }
 
+.text-nowrap {
+  white-space: nowrap;
+}
+
 .hero__showcase {
   justify-self: center;
   width: min(100%, 28rem);
@@ -289,7 +293,7 @@ main {
 
 @media (max-width: 640px) {
   main {
-    padding-top: 2.25rem;
+    padding-top: 1.75rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
@@ -301,21 +305,27 @@ main {
   .hero {
     min-height: 0;
     grid-template-columns: 1fr;
-    gap: 2.25rem;
+    gap: 2rem;
     text-align: center;
   }
 
   .hero__copy {
     margin: 0 auto;
+    max-width: 23rem;
   }
 
   .hero h1 {
-    font-size: clamp(4rem, 23vw, 6.5rem);
+    margin-bottom: 0.85rem;
+    font-size: clamp(3.75rem, 18vw, 5.25rem);
+    line-height: 0.86;
   }
 
   .hero p {
     margin-left: auto;
     margin-right: auto;
+    max-width: 21rem;
+    font-size: clamp(1.02rem, 4.55vw, 1.16rem);
+    line-height: 1.42;
   }
 
   .appstore-badge-link img {
@@ -323,11 +333,11 @@ main {
   }
 
   .hero .store-cta {
-    margin-top: 2rem;
+    margin-top: 1.8rem;
   }
 
   .hero__showcase {
-    width: min(100%, 19rem);
+    width: min(100%, 18.25rem);
   }
 
   .carousel__slide img {
