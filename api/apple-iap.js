@@ -105,14 +105,6 @@ async function sendAlert(text) {
   ]);
 }
 
-function isPurchaseEvent(notificationType) {
-  return [
-    "ONE_TIME_CHARGE",
-    "SUBSCRIBED",
-    "DID_RENEW"
-  ].includes(notificationType);
-}
-
 const storefrontToCountryCode = {
   ABW: "AW",
   AFG: "AF",
@@ -264,6 +256,18 @@ function formatCountry(storefront) {
   return [flag, normalizedStorefront].filter(Boolean).join(" ");
 }
 
+function messageTitle(notificationType, environment) {
+  if (notificationType === "REFUND") {
+    return "↩️Refund";
+  }
+
+  if (environment === "Sandbox" || environment === "SANDBOX") {
+    return "💰New purchase in sandbox!";
+  }
+
+  return "💰New purchase!";
+}
+
 export default async function handler(request, response) {
   if (request.method === "GET") {
     response.status(200).send("ok");
@@ -304,7 +308,10 @@ export default async function handler(request, response) {
       return;
     }
 
-    if (!isPurchaseEvent(notificationType) || !data?.signedTransactionInfo) {
+    if (
+      !["ONE_TIME_CHARGE", "REFUND"].includes(notificationType) ||
+      !data?.signedTransactionInfo
+    ) {
       response.status(200).send("ignored");
       return;
     }
@@ -316,7 +323,7 @@ export default async function handler(request, response) {
 
     await sendAlert(
       [
-        "💰New purchase!",
+        messageTitle(notificationType, data.environment),
         "",
         "Product: Later Unlimited",
         `Country: ${formatCountry(transaction.storefront)}`
