@@ -113,6 +113,157 @@ function isPurchaseEvent(notificationType) {
   ].includes(notificationType);
 }
 
+const storefrontToCountryCode = {
+  ABW: "AW",
+  AFG: "AF",
+  AGO: "AO",
+  AIA: "AI",
+  ALB: "AL",
+  AND: "AD",
+  ARE: "AE",
+  ARG: "AR",
+  ARM: "AM",
+  ATG: "AG",
+  AUS: "AU",
+  AUT: "AT",
+  AZE: "AZ",
+  BEL: "BE",
+  BEN: "BJ",
+  BFA: "BF",
+  BGR: "BG",
+  BHR: "BH",
+  BHS: "BS",
+  BLR: "BY",
+  BLZ: "BZ",
+  BMU: "BM",
+  BOL: "BO",
+  BRA: "BR",
+  BRB: "BB",
+  BRN: "BN",
+  BTN: "BT",
+  BWA: "BW",
+  CAN: "CA",
+  CHE: "CH",
+  CHL: "CL",
+  CHN: "CN",
+  COL: "CO",
+  CPV: "CV",
+  CRI: "CR",
+  CYP: "CY",
+  CZE: "CZ",
+  DEU: "DE",
+  DMA: "DM",
+  DNK: "DK",
+  DOM: "DO",
+  DZA: "DZ",
+  ECU: "EC",
+  EGY: "EG",
+  ESP: "ES",
+  EST: "EE",
+  FIN: "FI",
+  FRA: "FR",
+  GBR: "GB",
+  GEO: "GE",
+  GHA: "GH",
+  GRC: "GR",
+  GTM: "GT",
+  HKG: "HK",
+  HRV: "HR",
+  HUN: "HU",
+  IDN: "ID",
+  IND: "IN",
+  IRL: "IE",
+  ISL: "IS",
+  ISR: "IL",
+  ITA: "IT",
+  JAM: "JM",
+  JPN: "JP",
+  KEN: "KE",
+  KHM: "KH",
+  KOR: "KR",
+  KWT: "KW",
+  KAZ: "KZ",
+  LAO: "LA",
+  LBN: "LB",
+  LKA: "LK",
+  LTU: "LT",
+  LUX: "LU",
+  LVA: "LV",
+  MAC: "MO",
+  MAR: "MA",
+  MDA: "MD",
+  MDG: "MG",
+  MEX: "MX",
+  MKD: "MK",
+  MLI: "ML",
+  MLT: "MT",
+  MYS: "MY",
+  NER: "NE",
+  NGA: "NG",
+  NLD: "NL",
+  NOR: "NO",
+  NPL: "NP",
+  NZL: "NZ",
+  OMN: "OM",
+  PAK: "PK",
+  PAN: "PA",
+  PER: "PE",
+  PHL: "PH",
+  POL: "PL",
+  PRT: "PT",
+  PRY: "PY",
+  QAT: "QA",
+  ROU: "RO",
+  SAU: "SA",
+  SEN: "SN",
+  SGP: "SG",
+  SLV: "SV",
+  SRB: "RS",
+  SVK: "SK",
+  SVN: "SI",
+  SWE: "SE",
+  THA: "TH",
+  TUN: "TN",
+  TUR: "TR",
+  TWN: "TW",
+  TZA: "TZ",
+  UGA: "UG",
+  UKR: "UA",
+  URY: "UY",
+  USA: "US",
+  UZB: "UZ",
+  VEN: "VE",
+  VNM: "VN",
+  ZAF: "ZA"
+};
+
+function countryFlag(countryCode) {
+  if (!countryCode || countryCode.length !== 2) {
+    return "";
+  }
+
+  return countryCode
+    .toUpperCase()
+    .replace(/./g, (character) =>
+      String.fromCodePoint(127397 + character.charCodeAt(0))
+    );
+}
+
+function formatCountry(storefront) {
+  if (!storefront) {
+    return "Unknown";
+  }
+
+  const normalizedStorefront = storefront.toUpperCase();
+  const countryCode =
+    normalizedStorefront.length === 2
+      ? normalizedStorefront
+      : storefrontToCountryCode[normalizedStorefront];
+  const flag = countryFlag(countryCode);
+
+  return [flag, normalizedStorefront].filter(Boolean).join(" ");
+}
+
 export default async function handler(request, response) {
   if (request.method === "GET") {
     response.status(200).send("ok");
@@ -165,13 +316,10 @@ export default async function handler(request, response) {
 
     await sendAlert(
       [
-        "New App Store purchase",
-        `Type: ${notificationType}${subtype ? ` / ${subtype}` : ""}`,
-        `Product: ${transaction.productId || "unknown"}`,
-        `Transaction: ${transaction.transactionId || "unknown"}`,
-        `Original transaction: ${transaction.originalTransactionId || "unknown"}`,
-        `Environment: ${data.environment || "unknown"}`,
-        `Notification: ${notificationUUID}`
+        "💰New purchase!",
+        "",
+        "Product: Later Unlimited",
+        `Country: ${formatCountry(transaction.storefront)}`
       ].join("\n")
     );
 
