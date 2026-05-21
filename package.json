@@ -1,0 +1,12 @@
+{
+  "name": "later-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "start": "npx vercel dev"
+  },
+  "dependencies": {
+    "@apple/app-store-server-library": "^1.6.0"
+  }
+}
